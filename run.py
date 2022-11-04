@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def create_top_playlist(username, playlist_name):
+def create_top_playlist(username, playlist_name, time_range):
     scope = ["user-top-read", "playlist-modify-public"]
     artist_list = []
     top_tracks = []
@@ -12,7 +12,7 @@ def create_top_playlist(username, playlist_name):
 
     sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, username=username))
 
-    results = sp.current_user_top_artists(limit=10, time_range='medium_term')
+    results = sp.current_user_top_artists(limit=10, time_range=time_range)
 
     for item in results['items']:
         artist_list.append(item['id'])
@@ -34,5 +34,11 @@ def create_top_playlist(username, playlist_name):
 
 username = input('Enter username: ')
 playlist_name = input('Enter playlist name: ')
+user_time_range = input('short ~4 weeks, medium ~6 months, long ~several years \nEnter a timeframe: ')
+time_range = {
+    'short': 'short_term',
+    'medium': 'medium_term',
+    'long': 'long_term',
+}
 
-create_top_playlist(username, playlist_name)
+create_top_playlist(username, playlist_name, time_range[user_time_range])

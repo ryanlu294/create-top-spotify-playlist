@@ -1,18 +1,19 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from dotenv import load_dotenv
 
-load_dotenv()
-
-def create_top_playlist(username, playlist_name, time_range):
+def create_top_playlist(playlist_name, time_range):
+    SPOTIPY_CLIENT_ID=''  # PUT YOUR CLIENT ID HERE
+    SPOTIPY_CLIENT_SECRET='' # PUT YOUR CLIENT SECRET HERE
+    SPOTIPY_REDIRECT_URI='http://localhost:8888/callback' # ADD THIS REDIRECT URI TO YOUR APP SETTINGS
     scope = ["user-top-read", "playlist-modify-public"]
     artist_list = []
     top_tracks = []
     playlist_id = 0
 
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, username=username))
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET, redirect_uri=SPOTIPY_REDIRECT_URI))
 
     results = sp.current_user_top_artists(limit=10, time_range=time_range)
+    username = sp.current_user()['id']
 
     for item in results['items']:
         artist_list.append(item['id'])
@@ -32,7 +33,6 @@ def create_top_playlist(username, playlist_name, time_range):
 
     sp.user_playlist_add_tracks(user=username,playlist_id=playlist,tracks=top_tracks)
 
-username = input('Enter username: ')
 playlist_name = input('Enter playlist name: ')
 user_time_range = input('short ~4 weeks, medium ~6 months, long ~several years \nEnter a timeframe: ')
 time_range = {
@@ -41,4 +41,4 @@ time_range = {
     'long': 'long_term',
 }
 
-create_top_playlist(username, playlist_name, time_range[user_time_range])
+create_top_playlist(playlist_name, time_range[user_time_range])

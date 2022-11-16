@@ -1,5 +1,5 @@
 # create-top-spotify-playlist
-Create a 100-song playlist based on your top 10 artists.
+Create a 50 song playlist containing your most listened to songs! 
 
 1. Install Python 3.10
 2. Create virtual environment -> python -m venv ./.venv
